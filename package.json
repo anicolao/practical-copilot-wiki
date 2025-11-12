@@ -1,0 +1,17 @@
+{
+  "name": "practical-copilot-wiki",
+  "version": "1.0.0",
+  "description": "A wiki for documenting how to effectively use agentic copilot.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tiddlywiki wiki --build index",
+    "serve": "tiddlywiki wiki --listen",
+    "test": "echo \"No tests specified\""
+  },
+  "keywords": ["tiddlywiki", "wiki", "copilot", "documentation"],
+  "author": "",
+  "license": "CC-BY-4.0",
+  "dependencies": {
+    "tiddlywiki": "^5.3.8"
+  }
+}
