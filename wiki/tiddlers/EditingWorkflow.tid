@@ -1,0 +1,50 @@
+title: Editing Workflow
+tags: Documentation Design
+
+!! Overview
+
+This document describes the proposed editing workflow for the Practical Copilot Wiki. Instead of the traditional TiddlyWiki approach where users download the entire HTML file when they save, we implement a GitHub-integrated workflow that enables collaborative editing while maintaining version control and review processes.
+
+!! Motivation
+
+The default TiddlyWiki save mechanism downloads a complete HTML file to the user's computer. While this works for personal wikis, it creates challenges for a collaborative, version-controlled wiki:
+
+* Users cannot easily contribute changes back to the repository
+* There's no review process for changes
+* Multiple concurrent editors would create conflicting versions
+* No audit trail of who made what changes
+
+Our new workflow addresses these issues by integrating with GitHub's issue and pull request system.
+
+!! High-Level Workflow
+
+{{User Guide: Editing the Wiki}}
+
+!! Technical Implementation
+
+The implementation consists of several components:
+
+{{Implementation: Save Button Integration}}
+
+{{Implementation: Issue Template}}
+
+{{Implementation: PR Preview Deployment}}
+
+!! Workflow Visualization
+
+{{Workflow Diagram}}
+
+!! Benefits
+
+* ''For Contributors'': Simple, familiar editing experience with clear submission process
+* ''For Maintainers'': Review changes before integration, maintain quality control
+* ''For Everyone'': Full audit trail, ability to preview changes, collaborative improvement
+
+!! Future Enhancements
+
+Potential improvements to consider:
+
+* Automated processing of issue content to create PRs directly
+* Integration with GitHub OAuth for authenticated editing
+* Real-time collaborative editing features
+* Automated testing of wiki content and links

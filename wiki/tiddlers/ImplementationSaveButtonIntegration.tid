@@ -1,0 +1,115 @@
+title: Implementation: Save Button Integration
+tags: Documentation Design Implementation
+
+!! Replacing the Save Mechanism
+
+TiddlyWiki's default save mechanism triggers a browser download of the complete HTML file. We replace this with a custom save handler that captures changes and opens a GitHub issue.
+
+!! Technical Approach
+
+!!! 1. Custom Save Module
+
+Create a custom TiddlyWiki plugin that:
+
+* Intercepts the save action
+* Extracts all modified, created, and deleted tiddlers since the wiki loaded
+* Serializes the changes in a structured format
+* Opens a pre-filled GitHub issue creation URL
+
+!!! 2. Change Detection
+
+The plugin needs to track:
+
+* ''Original state'': Snapshot of all tiddlers when the wiki loaded
+* ''Current state'': Current tiddler content
+* ''Diff calculation'': Identify what changed
+
+TiddlyWiki maintains this information internally in its store, which we can access through the `$tw.wiki` API.
+
+!!! 3. Serialization Format
+
+Changes are serialized as markdown-formatted text suitable for a GitHub issue:
+
+```
+## New Tiddlers
+
+### Tiddler Name 1
+```tid
+title: Tiddler Name 1
+tags: Tag1 Tag2
+
+Content goes here...
+```
+
+## Modified Tiddlers
+
+### Existing Tiddler Name
+**Before:**
+```tid
+title: Existing Tiddler Name
+tags: OldTag
+
+Old content...
+```
+
+**After:**
+```tid
+title: Existing Tiddler Name
+tags: NewTag
+
+New content...
+```
+
+## Deleted Tiddlers
+
+* System Tiddler Name
+```
+
+!!! 4. GitHub Issue URL
+
+The serialized changes are URL-encoded and included in a GitHub issue URL:
+
+```
+https://github.com/anicolao/practical-copilot-wiki/issues/new?
+  template=wiki-edit.md&
+  title=Wiki+Edit:+[Brief+Description]&
+  body=[URL-encoded+changes]
+```
+
+!!! 5. UI Changes
+
+* Replace the red save button with a ''Submit Changes'' button
+* Add a visual indicator showing how many tiddlers have changed
+* Provide a ''Preview Changes'' option before submission
+* Show a warning if users try to leave with unsaved changes
+
+!! Plugin Structure
+
+```
+plugins/
+  github-saver/
+    plugin.info           # Plugin metadata
+    saver.js             # Main save handler
+    change-tracker.js    # Track wiki changes
+    serializer.js        # Format changes for GitHub
+    ui/
+      SaveButton.tid     # Custom save button UI
+      ChangeIndicator.tid # Shows pending changes count
+```
+
+!! Configuration
+
+The plugin needs configuration for:
+
+* Repository owner and name
+* Issue template name
+* Custom button text and styling
+* Whether to include system tiddlers in diffs (usually no)
+
+!! Browser Compatibility
+
+The solution uses standard web APIs:
+
+* `window.open()` for opening the GitHub issue URL
+* `localStorage` (optional) for persisting unsaved changes
+* No server-side components required

@@ -1,0 +1,63 @@
+title: User Guide: Editing the Wiki
+tags: Documentation Design UserGuide
+
+!! How to Edit the Wiki
+
+!!! Step 1: Make Your Changes
+
+# Visit the wiki at https://anicolao.github.io/practical-copilot-wiki/
+# Click the edit button (pencil icon) on any tiddler you want to modify, or create a new tiddler
+# Make your desired changes using TiddlyWiki's markup language
+# Edit multiple tiddlers if needed - all changes will be captured together
+
+!!! Step 2: Submit Your Changes
+
+When you're ready to submit your changes:
+
+# Click the ''Submit Changes'' button (replaces the traditional red save button)
+# A GitHub issue form will open with your changes pre-filled
+# Review the changes captured in the issue
+# Add a description of why you're making these changes
+# Submit the issue
+
+!!! Step 3: Wait for Review
+
+# Maintainers will review your proposed changes
+# They may ask questions or request modifications in the issue comments
+# If approved, a maintainer will create a pull request from your changes
+# You can preview the changes by visiting the PR preview link (if provided)
+
+!!! Step 4: Changes Go Live
+
+Once the pull request is merged:
+
+# Your changes will be automatically deployed to the live wiki
+# The wiki will be updated within a few minutes
+# You'll be credited as a contributor in the commit history
+
+!! What Gets Captured
+
+When you click ''Submit Changes'', the system captures:
+
+* All new tiddlers you created
+* All modified tiddlers (showing before/after)
+* Deleted tiddlers (if any)
+* Timestamps and metadata
+
+!! Tips for Success
+
+* ''Be Clear'': Explain why you're making the changes in the issue description
+* ''Be Focused'': Try to keep each submission focused on one topic or improvement
+* ''Check Preview'': Review what's captured before submitting the issue
+* ''Be Patient'': Maintainers review changes as quickly as possible
+
+!! For Maintainers
+
+When processing editing issues:
+
+# Review the proposed changes in the issue
+# Create a new branch from main
+# Apply the changes from the issue
+# Create a pull request
+# Review the PR preview deployment
+# Merge when satisfied

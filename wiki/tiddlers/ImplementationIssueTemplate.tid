@@ -1,0 +1,129 @@
+title: Implementation: Issue Template
+tags: Documentation Design Implementation
+
+!! GitHub Issue Template
+
+To standardize wiki edit submissions, we create a GitHub issue template specifically for wiki edits.
+
+!! Template Location
+
+```
+.github/ISSUE_TEMPLATE/wiki-edit.md
+```
+
+!! Template Structure
+
+```yaml
+---
+name: Wiki Edit
+about: Submit changes to the wiki content
+title: 'Wiki Edit: [Brief Description]'
+labels: wiki-edit, needs-review
+assignees: ''
+---
+
+## Summary
+
+<!-- Briefly describe what you're changing and why -->
+
+## Changes
+
+<!-- This section will be auto-filled by the wiki's submit mechanism -->
+<!-- You can also manually paste tiddler content here -->
+
+### New Tiddlers
+
+<!-- List any new tiddlers created -->
+
+### Modified Tiddlers
+
+<!-- List any tiddlers that were modified -->
+
+### Deleted Tiddlers
+
+<!-- List any tiddlers that were deleted -->
+
+## Additional Context
+
+<!-- Add any other context about the changes here -->
+<!-- Screenshots, links, or explanations are helpful -->
+
+## Checklist
+
+- [ ] I have reviewed my changes for accuracy
+- [ ] I have checked for spelling and grammar errors
+- [ ] Links in my changes are working (if applicable)
+- [ ] I have tested my markup renders correctly (if applicable)
+```
+
+!! Field Mapping
+
+When the wiki generates the issue URL, it maps changes to template sections:
+
+* ''Title'': Auto-generated from changed tiddler names, user can edit
+* ''Labels'': Automatically includes `wiki-edit` and `needs-review`
+* ''Body - Changes section'': Populated with serialized tiddler diffs
+* ''Body - Summary'': User fills in the web form
+* ''Body - Additional Context'': User fills in the web form
+
+!! URL Length Considerations
+
+GitHub issue URLs have practical length limits. For large changesets:
+
+* ''Option 1'': Truncate with message "Changes too large, see comment"
+* ''Option 2'': Create empty issue and immediately post changes as comment via GitHub API
+* ''Option 3'': Use a pastebin service and link to it
+* ''Recommended'': Option 1 for simplicity, encourage focused edits
+
+!! Label Workflow
+
+Issues with the `wiki-edit` label follow this workflow:
+
+# ''needs-review'': Initial state
+# ''in-progress'': When a maintainer starts creating the PR
+# ''preview-available'': When PR is created and preview deployment is ready
+# ''approved'': When changes are approved
+# Closed: When the PR is merged
+
+!! Automation Opportunities
+
+Future enhancements could include GitHub Actions that:
+
+* Automatically parse the issue content
+* Create a branch with the changes
+* Open a pull request automatically
+* Add a comment with the PR preview link
+* Close the issue when the PR merges
+
+For the initial implementation, this is handled manually by maintainers.
+
+!! Example Issue
+
+An example of what a submitted issue would look like:
+
+```
+Title: Wiki Edit: Add guide for using custom agents
+
+Summary:
+Adding a new tiddler that explains how to work with custom agents in Copilot.
+
+Changes:
+
+### New Tiddlers
+
+#### Working With Custom Agents
+```tid
+title: Working With Custom Agents
+tags: Guide BestPractices
+
+!! Introduction
+
+Custom agents are specialized tools...
+```
+
+Checklist:
+- [x] I have reviewed my changes for accuracy
+- [x] I have checked for spelling and grammar errors  
+- [x] Links in my changes are working (if applicable)
+- [x] I have tested my markup renders correctly (if applicable)
+```
