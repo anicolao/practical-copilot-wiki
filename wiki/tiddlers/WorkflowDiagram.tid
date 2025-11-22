@@ -1,0 +1,196 @@
+title: Workflow Diagram
+tags: Documentation Design Diagram
+
+!! Visual Representation of the Editing Workflow
+
+The following diagram illustrates the complete flow from user editing to changes going live.
+
+!!! User Perspective
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 1. USER VISITS WIKI                                         │
+│    https://anicolao.github.io/practical-copilot-wiki/       │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 2. USER MAKES EDITS                                         │
+│    • Click edit button on existing tiddlers                 │
+│    • Create new tiddlers                                    │
+│    • Delete unwanted tiddlers                               │
+│    • Preview changes locally in browser                     │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 3. USER SUBMITS CHANGES                                     │
+│    • Click "Submit Changes" button                          │
+│    • Review captured changes                                │
+│    • System opens GitHub issue form                         │
+│    • Changes are pre-filled in issue body                   │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 4. USER COMPLETES ISSUE                                     │
+│    • Add description of changes (summary)                   │
+│    • Add any additional context                             │
+│    • Check the checklist boxes                              │
+│    • Submit the GitHub issue                                │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 5. WAIT FOR REVIEW                                          │
+│    • Issue is labeled "wiki-edit, needs-review"             │
+│    • User receives GitHub notifications                     │
+│    • Can respond to maintainer questions                    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+!!! Maintainer Perspective
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 1. MAINTAINER RECEIVES NOTIFICATION                         │
+│    • GitHub notifies of new wiki-edit issue                 │
+│    • Review issue content and changes                       │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 2. MAINTAINER CREATES BRANCH                                │
+│    • Create branch: feature/wiki-edit-{issue-number}        │
+│    • Apply changes from issue to tiddler files              │
+│    • Commit changes to branch                               │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 3. MAINTAINER OPENS PULL REQUEST                            │
+│    • Create PR from feature branch to main                  │
+│    • Link to original issue                                 │
+│    • PR triggers preview deployment workflow                │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 4. PREVIEW DEPLOYMENT                                       │
+│    • GitHub Actions builds wiki with changes                │
+│    • Deploys to pr-{number} subdirectory on gh-pages        │
+│    • Bot comments on PR with preview URL                    │
+│    • Example: .../practical-copilot-wiki/pr-42/             │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 5. REVIEW AND MERGE                                         │
+│    • Maintainer reviews changes in preview                  │
+│    • Checks for formatting, accuracy, quality               │
+│    • Merges PR if approved                                  │
+│    • Closes original issue                                  │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 6. AUTOMATIC DEPLOYMENT                                     │
+│    • Merge to main triggers deploy workflow                 │
+│    • Wiki is rebuilt with new changes                       │
+│    • Deployed to main GitHub Pages site                     │
+│    • Changes are live within minutes                        │
+└─────────────────────────────────────────────────────────────┘
+```
+
+!!! System Architecture
+
+```
+┌──────────────────────────────────────────────────────────┐
+│ BROWSER (User's Computer)                                │
+│                                                           │
+│  ┌────────────────────────────────────────────┐         │
+│  │ TiddlyWiki (Static HTML)                   │         │
+│  │                                             │         │
+│  │  • Loads from GitHub Pages                 │         │
+│  │  • Runs entirely in browser                │         │
+│  │  • Custom GitHub Saver Plugin              │         │
+│  │    - Tracks changes                        │         │
+│  │    - Serializes diffs                      │         │
+│  │    - Generates issue URL                   │         │
+│  └─────────────┬──────────────────────────────┘         │
+│                │                                          │
+└────────────────┼──────────────────────────────────────────┘
+                 │ Opens GitHub URL
+                 ▼
+┌──────────────────────────────────────────────────────────┐
+│ GITHUB.COM                                               │
+│                                                           │
+│  ┌────────────────────────────────────────────┐         │
+│  │ Issue Creation Page                        │         │
+│  │  • Pre-filled with changes                 │         │
+│  │  • Uses wiki-edit template                 │         │
+│  │  • User completes and submits              │         │
+│  └────────────────────────────────────────────┘         │
+│                                                           │
+│  ┌────────────────────────────────────────────┐         │
+│  │ Repository                                  │         │
+│  │  • Issues with wiki-edit label             │         │
+│  │  • Pull requests for changes               │         │
+│  │  • Source tiddler files                    │         │
+│  └─────────────┬──────────────────────────────┘         │
+└────────────────┼──────────────────────────────────────────┘
+                 │
+                 ▼
+┌──────────────────────────────────────────────────────────┐
+│ GITHUB ACTIONS                                           │
+│                                                           │
+│  ┌────────────────────────────────────────────┐         │
+│  │ Main Deploy Workflow (on main branch)      │         │
+│  │  • Builds wiki from tiddler files          │         │
+│  │  • Deploys to GitHub Pages root            │         │
+│  └────────────────────────────────────────────┘         │
+│                                                           │
+│  ┌────────────────────────────────────────────┐         │
+│  │ PR Preview Workflow (on PRs)               │         │
+│  │  • Builds wiki with PR changes             │         │
+│  │  • Deploys to pr-{number} subdirectory     │         │
+│  │  • Comments preview URL on PR              │         │
+│  └────────────────────────────────────────────┘         │
+│                                                           │
+│  ┌────────────────────────────────────────────┐         │
+│  │ Preview Cleanup Workflow (PR closed)       │         │
+│  │  • Removes pr-{number} subdirectory        │         │
+│  └────────────────────────────────────────────┘         │
+└────────────────┬─────────────────────────────────────────┘
+                 │
+                 ▼
+┌──────────────────────────────────────────────────────────┐
+│ GITHUB PAGES                                             │
+│                                                           │
+│  anicolao.github.io/practical-copilot-wiki/              │
+│  │                                                        │
+│  ├── index.html (main wiki)                              │
+│  ├── pr-42/ (preview for PR #42)                         │
+│  │   └── index.html                                      │
+│  └── pr-43/ (preview for PR #43)                         │
+│      └── index.html                                      │
+└──────────────────────────────────────────────────────────┘
+```
+
+!! Key Components
+
+* ''TiddlyWiki Instance'': Single-page application loaded in user's browser
+* ''GitHub Saver Plugin'': Custom TiddlyWiki plugin that replaces save mechanism
+* ''Issue Template'': Standardized format for wiki edit submissions
+* ''GitHub Actions'': Automated build and deployment workflows
+* ''GitHub Pages'': Hosting platform for main wiki and PR previews
+
+!! Data Flow
+
+# User edits happen entirely in browser memory
+# On "submit", changes are serialized to text format
+# GitHub issue URL is constructed with changes in query parameters
+# User completes issue submission on GitHub
+# Maintainer manually applies changes to tiddler files
+# Pull request triggers automated preview deployment
+# Merge to main triggers production deployment
